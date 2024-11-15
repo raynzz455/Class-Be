@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
@@ -23,7 +23,7 @@ export class AdminService {
   async signIn(email: string, password: string) {
     const admin = await this.validateAdmin(email, password);
     if (!admin) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials for Admin');
     }
 
     const payload = { username: admin.name, sub: admin.id, role: 'admin', slug: admin.slug };

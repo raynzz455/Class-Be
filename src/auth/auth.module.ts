@@ -7,8 +7,6 @@ import { JwtStrategy } from './jwt/jwt.strategy';
 import { LocalStrategy } from './jwt/local.strategy';
 import { PrismaService } from '../prisma/prisma.service';
 import { jwtConstants } from './auth.constants';
-import { AdminService } from '../admin/admin.service';
-import { AdminController } from '../admin/admin.controller';
 
 @Module({
   imports: [
@@ -18,8 +16,8 @@ import { AdminController } from '../admin/admin.controller';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy, PrismaService, AdminService],
-  controllers: [AuthController, AdminController],
-  exports: [AuthService, JwtModule], // Pastikan JwtModule diekspor
+  providers: [AuthService, JwtStrategy, LocalStrategy, PrismaService],
+  controllers: [AuthController],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
