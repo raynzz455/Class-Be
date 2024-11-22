@@ -10,11 +10,21 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async getAllUsers() {
-    return this.prisma.user.findMany({
-      include: {
-        roles: true,
-      },
-    });
+    const users = await this.prisma.user.findMany();
+
+    const usersWithRoles = await Promise.all(users.map(async user => {
+      const userRoles = await this.prisma.userRole.findMany({
+        where: { userId: user.id },
+        include: { role: true }  
+      });
+
+      return {
+        ...user,
+        roles: userRoles.map(userRole => userRole.role)  
+      };
+    }));
+
+    return usersWithRoles;
   }
 
   async createUser(createUserDto: CreateUserDto) {
