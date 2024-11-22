@@ -8,8 +8,16 @@ import { AddRoleDto } from './dto/add-role.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+  async getAllUsers() {
+    return this.prisma.user.findMany({
+      include: {
+        roles: true, 
+      },
+    });
+  }
+
   async createUser(createUserDto: CreateUserDto) {
-    const { name, email, password, roleId } = createUserDto;
+    const { name, email, password } = createUserDto;
 
     const user = await this.prisma.user.create({
       data: {
@@ -22,7 +30,7 @@ export class UsersService {
     await this.prisma.userRole.create({
       data: {
         userId: user.id,
-        roleId,
+        roleId: '1',
       },
     });
 
