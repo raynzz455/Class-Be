@@ -7,13 +7,13 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 export class RolesService {
   constructor(private prisma: PrismaService) {}
 
+  async getAllRoles() {
+    return this.prisma.role.findMany();
+  }
+
   async createRole(createRoleDto: CreateRoleDto) {
-    const { name, slug } = createRoleDto;
     return this.prisma.role.create({
-      data: {
-        name,
-        slug,
-      },
+      data: createRoleDto,
     });
   }
 
@@ -24,13 +24,9 @@ export class RolesService {
   }
 
   async updateRole(id: string, updateRoleDto: UpdateRoleDto) {
-    const { name, slug } = updateRoleDto;
     return this.prisma.role.update({
       where: { id },
-      data: {
-        name,
-        slug,
-      },
+      data: updateRoleDto,
     });
   }
 }
