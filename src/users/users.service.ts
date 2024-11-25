@@ -70,15 +70,28 @@ export class UsersService {
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
-    const { name, email, password } = updateUserDto;
-    return this.prisma.user.update({
+    const { name, email, roleId } = updateUserDto;
+
+    // Update user name and email
+    const user = await this.prisma.user.update({
       where: { id },
       data: {
         name,
         email,
-        password,
       },
     });
+
+    // Update user role in UserRole table
+    if (roleId) {
+      await this.prisma.userRole.updateMany({
+        where: { userId: id },
+        data: {
+          roleId: roleId,
+        },
+      });
+    }
+
+    return user;
   }
 
   async addRoleToUser(userId: string, addRoleDto: AddRoleDto) {
